@@ -87,7 +87,7 @@ Kerem
 
 - [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/)
 - [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html)
-- 42 School **subject PDF** (ödev dokümanı)
+- 42 School **subject PDF** (ödev dokümanı) (42 Kendi subjectlerinin açık bir şekilde paylaşılmasına artık sıcak bakmıyor bu yüzden burda yer vermeyeceğim)
 
 ---
 
