@@ -1,18 +1,32 @@
 #include "../inc/libft/libft.h"
 #include "../inc/ft_garbage_collector.h"
+#include "../inc/minishell.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
-int	main(void)
+static void	shell_init(t_shell *shell, char **envp);
+
+int	main(int argc, char *argv[], char **envp)
 {
-	t_gc	*gc;
+	t_shell	shell;
 
-	gc = NULL;
-	gc_malloc(10, &gc);
-	gc_free(gc_malloc(10, &gc), &gc);
-	gc_free_all(&gc);
+	(void)envp;
+	if (argc > 1)
+	{
+		ft_putstr_fd("minishell: Sadece interaktif mod desteklenir\n", STDERR_FILENO);
+		return (1);
+	}
+	shell_init(&shell, envp);
 
-	printf("\033[34mminishell \033[32m$ \033[0m");
-
+	clean_exit(&shell, 0, 0, NULL);
 	return (0);
+}
+
+static void	shell_init(t_shell *shell, char **envp)
+{
+	shell->gc = NULL;
+	shell->env = env_init(envp, shell);
+	if (!shell->env)
+		clean_exit(shell, 1, E_WRITE_STDE, "minishell: failed to init environ\n");
 }
