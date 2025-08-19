@@ -12,21 +12,13 @@ void	upd_sh_last_stat(t_shell *sh, int new_value)
 
 void	setup_signals_prompt(void)
 {
-	struct sigaction	sa_int;	
-
-	sa_int = setup_sigint_prompt();
-	sigaction(SIGINT, &sa_int, NULL);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-struct sigaction	setup_sigint_prompt(void)
-{
 	struct sigaction	sa_int;
 
 	sa_int.sa_handler = handle_sigint_prompt;
 	sigemptyset(&sa_int.sa_mask);
 	sa_int.sa_flags = SA_RESTART;
-	return (sa_int);
+	sigaction(SIGINT, &sa_int, NULL);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	handle_sigint_prompt(int sig)

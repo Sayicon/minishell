@@ -4,7 +4,7 @@
 
 static void	p_append_str(char *prompt, char *str, size_t total_len);
 static void p_change_color(char *prompt, const char *color, size_t total_len);
-static size_t get_colors_len();
+static size_t get_colors_len(void);
 
 char	*assemble_prompt(char *user, char *host, char *cwd, t_shell *shell)
 {
@@ -72,7 +72,7 @@ static void	p_append_str(char *prompt, char *str, size_t total_len)
 	prompt[i] = '\0';  // Sonuna null karakter ekle
 }
 
-static size_t get_colors_len()
+static size_t get_colors_len(void)
 {
 	size_t	colors_len;
 	size_t	beg_len;

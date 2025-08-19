@@ -61,7 +61,6 @@ char				*assemble_prompt(char *user, char *host, char *cwd, t_shell *shell);
 /*		->	Prompt Signals*/
 void				upd_sh_last_stat(t_shell *sh, int new_value);
 void				setup_signals_prompt(void);
-struct sigaction	setup_sigint_prompt(void);
 void				handle_sigint_prompt(int sig);
 
 
