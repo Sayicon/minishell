@@ -1,5 +1,7 @@
 #include "../../../inc/ft_garbage_collector.h"
 #include "../../../inc/libft/libft.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 static t_gc	*gc_create(void)
 {
@@ -75,7 +77,12 @@ int	gc_add_garbage(void	*ptr, t_gc **garcol)
 		return (0);
 	garbage = gc_create();
 	if (!garbage)
-		return (0);
+	{
+		free(ptr);
+		gc_free_all(garcol);
+		perror("gc_add_garbage: ");
+		exit(EXIT_FAILURE);
+	}
 	garbage->addr = ptr;
 	garbage_add_back(garbage, garcol);
 	return (1);
