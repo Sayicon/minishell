@@ -12,12 +12,10 @@ int	is_all_whitespaces(char *input)
 	while (input[i])
 	{
 		if (input[i] != ' ' && input[i] != '\t')
-		{
-			free(input);
 			return (0);
-		}
 		i++;
 	}
+	free(input);
 	return (1);
 }
 

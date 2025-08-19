@@ -3,6 +3,8 @@
 		"libft.h": "c",
 		"ft_garbage_collector.h": "c",
 		"minishell.h": "c",
-		"unistd.h": "c"
+		"unistd.h": "c",
+		"types.h": "c",
+		"signal.h": "c"
 	}
 }

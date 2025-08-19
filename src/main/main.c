@@ -14,6 +14,7 @@ int	main(int argc, char *argv[], char **envp)
 
 	if (argc > 1)
 	{
+		(void)argv;
 		ft_putstr_fd("minishell: Sadece interaktif mod desteklenir\n", STDERR_FILENO);
 		return (1);
 	}

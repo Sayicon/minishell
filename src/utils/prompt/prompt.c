@@ -12,13 +12,11 @@ char	*make_prompt(t_shell *shell)
 	char	*user;
 	char	*host;
 	char	*cwd;
-	size_t	len;
 
 	user = get_user(shell);
 	host = get_host(shell);
 	cwd = get_cwd(shell);
-	len = ft_strlen(user) + 1 + ft_strlen(host) + 1 + ft_strlen(cwd) + 3;
-	prompt = assemble_prompt(user, host, cwd, len);
+	prompt = assemble_prompt(user, host, cwd, shell);
 	setup_signals_prompt();
 	return (prompt);
 }
@@ -33,7 +31,6 @@ void	prompt(t_shell *shell)
 		pmt = make_prompt(shell);
 		g_signal_status = -1;
 		input = readline(pmt);
-		free(pmt);
 		if (g_signal_status == 130)
 			upd_sh_last_stat(shell, -1);
 		if (!input)
@@ -47,7 +44,7 @@ void	prompt(t_shell *shell)
 			break ;
 		}
 		add_history(input);
-		minishell(input, shell);
+		//minishell(input, shell);
 		free(input);
 	}
 }
@@ -70,10 +67,10 @@ char	*get_cwd(t_shell *shell)
 		cwd = getcwd(NULL, 0);
 		gc_add_garbage(cwd, &(shell->gc));
 		if (!cwd)
-			retrun (safe_dup("(deleted)", shell));
+			return (safe_dup("(deleted)", shell));
 		if (cwd && home && ft_strncmp(cwd, home, ft_strlen(home)) == 0)
 		{
-			display = get_replaced_cwd(cwd, home);
+			display = get_replaced_cwd(cwd, home, shell);
 			return (display);
 		}
 	}

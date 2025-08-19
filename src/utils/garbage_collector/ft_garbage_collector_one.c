@@ -15,21 +15,12 @@ static t_gc	*gc_create(void)
 	return	(garbage);
 }
 
-static void	garbage_add_back(t_gc *garbage, t_gc **garcol)
+static void	garbage_add_garbage(t_gc *garbage, t_gc **garcol)
 {
-	t_gc	*iter;
-
 	if (!garbage || !garcol)
 		return ;
-	if (!(*garcol))
-		*garcol = garbage;
-	else
-	{
-		iter = *garcol;
-		while (iter->next != NULL)
-			iter = iter->next;
-		iter->next = garbage;
-	}
+	garbage->next = *garcol;
+	*garcol = garbage;
 }
 
 void	*gc_malloc(size_t size, t_gc **garcol)
@@ -46,7 +37,7 @@ void	*gc_malloc(size_t size, t_gc **garcol)
 	if (!garbage)
 		return (free(ptr), NULL);
 	garbage->addr = ptr;
-	garbage_add_back(garbage, garcol);
+	garbage_add_garbage(garbage, garcol);
 	return (ptr);
 }
 
@@ -65,7 +56,7 @@ void	*gc_calloc(size_t size, t_gc **garcol)
 	if (!garbage)
 		return (free(ptr), NULL);
 	garbage->addr = ptr;
-	garbage_add_back(garbage, garcol);
+	garbage_add_garbage(garbage, garcol);
 	return (ptr);
 }
 
@@ -84,6 +75,6 @@ int	gc_add_garbage(void	*ptr, t_gc **garcol)
 		exit(EXIT_FAILURE);
 	}
 	garbage->addr = ptr;
-	garbage_add_back(garbage, garcol);
+	garbage_add_garbage(garbage, garcol);
 	return (1);
 }

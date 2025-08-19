@@ -1,6 +1,8 @@
 #include "../../../inc/minishell.h"
 #include "../../../inc/libft/libft.h"
 
+static t_env	*env_create(char *env_str, t_shell *shell);
+
 t_env	*env_init(char **envp, t_shell *shell)
 {
 	t_env	*head;
