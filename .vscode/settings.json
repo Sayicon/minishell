@@ -5,6 +5,9 @@
 		"minishell.h": "c",
 		"unistd.h": "c",
 		"types.h": "c",
-		"signal.h": "c"
+		"signal.h": "c",
+		"cstdlib": "c",
+		"stdlib.h": "c",
+		"structs.h": "c"
 	}
 }

@@ -55,7 +55,7 @@ char	*get_replaced_cwd(const char *raw, const char *home, t_shell *shell)
 	if (raw[home_len] == '\0')
 		return (safe_dup("~", shell));
 	cwd = ft_strjoin("~/", raw + home_len);
-	if (!cwd || gc_add_garbage(cwd, &(shell->gc)) == 0)
+	if (!cwd || gc_add_garbage(cwd, shell) == 0)
 		clean_exit(shell, 1, E_WRITE_STDE, "minishell: failed to create replaced cwd\n");
 	return (cwd);
 }

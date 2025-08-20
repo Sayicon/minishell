@@ -17,7 +17,7 @@ char	*assemble_prompt(char *user, char *host, char *cwd, t_shell *shell)
 	len = ft_strlen(user) + 1 + ft_strlen(host) + 1 + ft_strlen(cwd) + 2;
 	colors_len = get_colors_len();
 	total_len = len + colors_len + 1;
-	prompt = gc_calloc(total_len, &(shell->gc));
+	prompt = gc_calloc(total_len, shell);
 	if (!prompt)
 		clean_exit(shell, 1, E_WRITE_STDE, "minishell: failed to allocate prompt\n");
 	p_change_color(prompt, C_CYAN, total_len);

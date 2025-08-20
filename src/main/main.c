@@ -24,9 +24,39 @@ int	main(int argc, char *argv[], char **envp)
 	return (0);
 }
 
+/* [BENİ SİL] Deneme için yazılmış fonkisyoundur siliniz. */
+void	write_all_tokens(t_token_list *token_list)
+{
+	t_token	*current;
+
+	if (!token_list || !token_list->head)
+		return;
+	current = token_list->head;
+	printf("Tokens in the list:\n");
+	while (current)
+	{
+		printf("Token Type: %d, Value: %s\n", current->type, current->value);
+		current = current->next;
+	}
+}
+
+void	minishell(char *input, t_shell *shell)
+{
+	shell->token_list = tokenizer(input, shell);
+	if (!shell->token_list)
+	{
+		/* Syntax error code */
+		shell->last_status = 2;
+		return ;
+	}
+	write_all_tokens(shell->token_list);
+	gc_free_tokens(&shell->token_list);
+}
+
 static void	shell_init(t_shell *shell, char **envp)
 {
 	shell->gc = NULL;
+	shell->token_list = NULL;
 	shell->env = env_init(envp, shell);
 	if (!shell->env)
 		clean_exit(shell, 1, E_WRITE_STDE, "minishell: failed to init environ\n");

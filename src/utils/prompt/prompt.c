@@ -44,7 +44,7 @@ void	prompt(t_shell *shell)
 			break ;
 		}
 		add_history(input);
-		//minishell(input, shell);
+		minishell(input, shell);
 		free(input);
 	}
 }
@@ -65,7 +65,7 @@ char	*get_cwd(t_shell *shell)
 	else
 	{
 		cwd = getcwd(NULL, 0);
-		gc_add_garbage(cwd, &(shell->gc));
+		gc_add_garbage(cwd, shell);
 		if (!cwd)
 			return (safe_dup("(deleted)", shell));
 		if (cwd && home && ft_strncmp(cwd, home, ft_strlen(home)) == 0)

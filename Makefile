@@ -16,8 +16,11 @@ SRCS		= $(SRC_UTILS)/garbage_collector/ft_garbage_collector_one.c \
 			  $(SRC_UTILS)/prompt/prompt_utils_two.c \
 			  $(SRC_UTILS)/prompt/prompt_craft.c \
 			  $(SRC_UTILS)/signals/signal_prompt.c \
-			  $(SRC_UTILS)/clean_exit.c \
 			  $(SRC_UTILS)/env/env_init.c \
+			  $(SRC_DIR)/errors/errors.c \
+			  $(SRC_DIR)/lexer/tokens.c \
+			  $(SRC_DIR)/lexer/tokenizer.c \
+			  $(SRC_DIR)/lexer/tokenizer_utils.c \
 			  $(SRC_DIR)/main/main.c
 
 

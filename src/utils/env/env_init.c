@@ -30,7 +30,7 @@ static t_env	*env_create(char *env_str, t_shell *shell)
 	t_env	*ptr;
 	char	*sep;
 
-	ptr = gc_calloc(sizeof(t_env), &(shell->gc));
+	ptr = gc_calloc(sizeof(t_env), shell);
 	if (!ptr)
 		return (NULL);
 	sep = ft_strchr(env_str, '=');
@@ -40,11 +40,11 @@ static t_env	*env_create(char *env_str, t_shell *shell)
 	ptr->key = ft_strdup(env_str);
 	if (!ptr->key)
 		return (NULL);
-	gc_add_garbage(ptr->key, &(shell->gc));
+	gc_add_garbage(ptr->key, shell);
 	ptr->value = ft_strdup(sep + 1);
 	if (!ptr->value)
 		return (NULL);
-	gc_add_garbage(ptr->value, &(shell->gc));
+	gc_add_garbage(ptr->value, shell);
 	*sep = '=';
 	ptr->next = NULL;
 	return (ptr);

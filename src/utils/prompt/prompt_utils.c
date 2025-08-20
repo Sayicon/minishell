@@ -30,7 +30,7 @@ char	*get_user(t_shell *shell)
 		user = ft_strdup(user);
 	if (!user)
 		clean_exit(shell, 1, E_WPERROR, "minishell:");
-	if (gc_add_garbage(user, &(shell->gc)) == 0)
+	if (gc_add_garbage(user, shell) == 0)
 	{
 		free(user);
 		clean_exit(shell, 1, E_WRITE_STDE, "minishell: failed to add garbage\n");
@@ -71,7 +71,7 @@ char	*safe_dup(const char *str, t_shell *shell)
 		ptr = ft_strdup(str);
 	if (!ptr)
 		clean_exit(shell, 1, E_WPERROR, "minishell:");
-	if (gc_add_garbage(ptr, &(shell->gc)) == 0)
+	if (gc_add_garbage(ptr, shell) == 0)
 	{
 		iter = shell->gc;
 		while (iter)

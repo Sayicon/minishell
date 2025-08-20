@@ -1,4 +1,5 @@
 #include "../../../inc/ft_garbage_collector.h"
+#include "../../../inc/minishell.h"
 #include "../../../inc/libft/libft.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,11 +24,13 @@ static void	garbage_add_garbage(t_gc *garbage, t_gc **garcol)
 	*garcol = garbage;
 }
 
-void	*gc_malloc(size_t size, t_gc **garcol)
+void	*gc_malloc(size_t size, t_shell *shell)
 {
-	void	*ptr;
+	t_gc	**garcol;
 	t_gc	*garbage;
+	void	*ptr;
 
+	garcol = &(shell->gc);
 	if (!garcol || size == 0)
 		return (NULL);
 	ptr = malloc(size);
@@ -41,11 +44,13 @@ void	*gc_malloc(size_t size, t_gc **garcol)
 	return (ptr);
 }
 
-void	*gc_calloc(size_t size, t_gc **garcol)
+void	*gc_calloc(size_t size, t_shell *shell)
 {
-	void	*ptr;
+	t_gc	**garcol;
 	t_gc	*garbage;
+	void	*ptr;
 
+	garcol = &(shell->gc);
 	if (!garcol || size == 0)
 		return (NULL);
 	ptr = malloc(size);
@@ -60,17 +65,19 @@ void	*gc_calloc(size_t size, t_gc **garcol)
 	return (ptr);
 }
 
-int	gc_add_garbage(void	*ptr, t_gc **garcol)
+int	gc_add_garbage(void	*ptr, t_shell *shell)
 {
 	t_gc	*garbage;
+	t_gc	**garcol;
 
+	garcol = &(shell->gc);
 	if (!ptr || !garcol)
 		return (0);
 	garbage = gc_create();
 	if (!garbage)
 	{
 		free(ptr);
-		gc_free_all(garcol);
+		gc_free_all(shell);
 		perror("gc_add_garbage: ");
 		exit(EXIT_FAILURE);
 	}
