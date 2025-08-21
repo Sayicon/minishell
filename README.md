@@ -1,96 +1,188 @@
-# Minishell
+Minishell
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Status](https://img.shields.io/badge/status-in%20progress-yellow)
-![42](https://img.shields.io/badge/School-42-black)
+  
 
-Minishell, **42 School** müfredatının bir parçası olan, Bash'e benzer bir kabuk (shell) uygulamasıdır.  
-Bu proje, temel Unix komutlarını çalıştırabilen, yönlendirmeler ve pipe'lar gibi özellikleri destekleyen, etkileşimli bir kabuk geliştirmeyi amaçlar.
+Bash'e benzer etkileşimli bir mini shell. 42 School müfredatının bir parçası.
 
-> **Durum:** Bu proje şu anda geliştirme aşamasında ve temel altyapı üzerinde çalışılmaktadır.
+> Durum (2025-08-20): Aktif geliştirme. Lexer/Tokenizer üzerinde çalışmalar sürüyor, çevre değişkenleri ve temel altyapı hazır.
 
----
 
-## 🎯 Amaçlar
 
-- C programlama dilinde **process management** ve **system call** kullanımını öğrenmek.
-- **Lexer / Parser / AST** mantığını kavramak.
-- `fork()`, `execve()`, `pipe()`, `dup2()` gibi temel Unix fonksiyonlarının çalışma şeklini anlamak.
-- Signal ve terminal yönetimi hakkında pratik bilgi edinmek.
 
 ---
 
-## 🛠 Planlanan Özellikler
+🚀 Hedefler
 
-- **Prompt** gösterimi
-- **Komut yürütme**
-  - Dış komutlar (`/bin/ls`, `/usr/bin/grep` vb.)
-  - Built-in komutlar (`cd`, `echo`, `pwd`, `export`, `unset`, `env`, `exit`)
-- **Yönlendirmeler**
-  - `>` `>>` `<` `<<` (heredoc)
-- **Pipe** desteği (`|`)
-- **Çevresel değişkenlerin yönetimi** (`$HOME`, `$PATH` vb.)
-- **Tırnak işaretleri**
-  - Tek tırnak `'...'` (literal)
-  - Çift tırnak `"..."` (expansion ile)
-- **Signal yönetimi**
-  - `Ctrl+C`, `Ctrl+D`, `Ctrl+\`
+C ile process management ve system call kullanımı
+
+Lexer → Parser → AST → Executor hattını kurmak
+
+fork, execve, pipe, dup2, wait* çağrılarıyla çoklu süreç yürütme
+
+Signal ve terminal yönetimi (prompt, heredoc, ctrl kombinasyonları)
+
+
 
 ---
 
-## 📂 Proje Yapısı (Planlanan)
+📦 Gereksinimler
 
-```
-minishell/
-├── inc/              # Header dosyaları
-├── src/              # Kaynak kodlar
-│   ├── lexer/        # Girdi -> Token
-│   ├── parser/       # Token -> AST
-│   ├── executor/     # AST -> Çalışan process
-│   ├── builtins/     # Dahili komutlar
-│   ├── utils/        # Yardımcı fonksiyonlar
-│   └── main.c
-├── Makefile
-└── README.md
-```
+OS: Linux
+
+Derleyici: cc / gcc (C99 uyumlu)
+
+Kütüphaneler: readline (42'de genellikle izinli), termcap/terminfo (gerekirse)
+
+
 
 ---
 
-## 🚀 Kurulum
+🛠️ Kurulum ve Derleme
 
-```bash
 git clone https://github.com/Sayicon/minishell.git
 cd minishell
-make
+make            # veya make re
 ./minishell
-```
+
+> Makefile ile obj/ klasörüné nesne dosyaları düşer.
+
+
+
 
 ---
 
-## 📌 Kullanım (Örnekler - Planlanan)
+📁 Proje Yapısı (güncel klasörler)
 
-```bash
+minishell/
+├─ inc/          # Headerlar
+├─ src/          # Kaynak kodlar
+│  ├─ utils/     # yardımcılar ("garbage collector" dahil)
+│  └─ ...        # lexer/parser/executor planlanıyor
+├─ obj/          # Derleme çıktıları
+├─ Makefile
+└─ README.md
+
+> Repo kökünde MIT LICENSE dosyası mevcut.
+
+
+
+
+---
+
+🔧 Uygulama Notları (güncel ilerleme)
+
+Garbage Collector (GC): Projede bellek takibi için basit bir GC katmanı eklendi (başlık ve yardımcı fonksiyonlarla). env_init gibi yerlerde kullanılıyor.
+
+Çevre Değişkenleri: env_init(char **envp, t_shell *shell) ile key=value çiftlerinden bağlı liste kuruluyor.
+
+Prompt: make_prompt() ile kullanıcı/host/cwd birleştirilip prompt oluşturuluyor. setup_signals_prompt() SIGINT yakalıyor, SIGQUIT ignore ediliyor.
+
+Tokenizer/Lexer (WIP): WORD, PIPE, REDIR_IN/OUT/APPEND, HEREDOC, LOGICAL_AND/OR, PAREN_OPEN/CLOSE türleri planlandı. Operatör tanıma ve tırnak/expand kuralları geliştiriliyor.
+
+Makefile: all, clean, fclean, re hedefleri ve obj/ dizini yönetimi aktif.
+
+
+
+---
+
+🧩 Token Türleri (planlanan)
+
+Tür	Açıklama	Örnek
+
+WORD	Argüman / kelime	ls, file.txt
+PIPE	pipe	`
+REDIR_IN	giriş yönlendirme	<
+REDIR_OUT	çıkış yönlendirme	>
+REDIR_APPEND	ekleme	>>
+HEREDOC	here-doc	<<
+LOGICAL_AND	&&	&& (bonus)
+LOGICAL_OR		
+PAREN_OPEN/CLOSE	gruplama	(, ) (bonus)
+
+
+
+---
+
+🥺 Test Önerileri
+
+echo hello, pwd, env
+
+ls -l | grep minishell | wc -l
+
+echo hi > out.txt, cat < out.txt, echo a >> out.txt
+
+cat <<EOF + içerik + EOF
+
+echo "a b" 'c d' "$USER" '$USER'
+
+Heredoc/prompt sırasında Ctrl+C ve Ctrl+\ sinyalleri
+
+
+
+---
+
+🗺 Yol Haritası
+
+[x] Makefile ve klasör yapısı
+
+[x] Garbage Collector
+
+[x] Env listesi kurulumu
+
+[x] Prompt + sinyaller
+
+[ ] Tokenizer kuralları (tırnak, escape, $expansion, whitespace)
+
+[ ] Parser & AST
+
+[ ] Executor (redir/pipe)
+
+[ ] Builtins (echo, cd, pwd, export, unset, env, exit)
+
+[ ] Heredoc (sinyal kontrolü dahil)
+
+[ ] Hata yönetimi ve çıkış kodları
+
+[ ] Edge-case test koleksiyonu
+
+
+
+---
+
+🤖 Kullanım (hedeflenen)
+
 minishell$ echo "Merhaba Dünya"
 Merhaba Dünya
-
-minishell$ ls -l | grep minishell
--rwxr-xr-x  1 user  user   12345 Aug 15 12:00 minishell
 
 minishell$ export NAME=Kerem
 minishell$ echo $NAME
 Kerem
-```
+
+minishell$ ls -l | grep minishell
+-rwxr-xr-x  1 user  user   12345 Aug 20 12:00 minishell
+
 
 ---
 
-## 📖 Kaynaklar
+📚 Kaynaklar
 
-- [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/)
-- [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html)
-- 42 School **subject PDF** (ödev dokümanı) (42 Kendi subjectlerinin açık bir şekilde paylaşılmasına artık sıcak bakmıyor bu yüzden burda yer vermeyeceğim)
+GNU Bash Reference Manual
+
+POSIX Shell Command Language
+
+42 Subject (paylaşıma uygun çerçevede)
+
+
 
 ---
 
-## 📜 Lisans
+🤝 Katkı
 
-Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
+PR/Issue açmadan önce lütfen stil ve proje hedefleriyle uyumu kontrol edin. 42 Norm ve proje kurallarına bağlı kalın.
+
+
+---
+
+📄 Lisans
+
+Bu proje MIT Lisansı ile lisanslanmıştır. Detaylar için LICENSE dosyasına bakın.
