@@ -1,188 +1,96 @@
-Minishell
+# Minishell
 
-42 School müfredatındaki bash-benzeri kabuk uygulaması. Temel hedef: etkileşimli bir kabukta komut yürütme, pipe ve yönlendirmeler, sinyaller ve çevresel değişkenlerle çalışma.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Status](https://img.shields.io/badge/status-in%20progress-yellow)
+![42](https://img.shields.io/badge/School-42-black)
 
-> Durum (21.08.2025): Aktif geliştirme sürüyor. Aşağıdaki bölümlerde neler hazır, neler sırada net olarak işaretlendi.
+Minishell, **42 School** müfredatının bir parçası olan, Bash'e benzer bir kabuk (shell) uygulamasıdır.  
+Bu proje, temel Unix komutlarını çalıştırabilen, yönlendirmeler ve pipe'lar gibi özellikleri destekleyen, etkileşimli bir kabuk geliştirmeyi amaçlar.
 
-
-
+> **Durum:** Bu proje şu anda geliştirme aşamasında ve temel altyapı üzerinde çalışılmaktadır.
 
 ---
 
-Gereksinimler
+## 🎯 Amaçlar
 
-C derleyicisi: cc / gcc
+- C programlama dilinde **process management** ve **system call** kullanımını öğrenmek.
+- **Lexer / Parser / AST** mantığını kavramak.
+- `fork()`, `execve()`, `pipe()`, `dup2()` gibi temel Unix fonksiyonlarının çalışma şeklini anlamak.
+- Signal ve terminal yönetimi hakkında pratik bilgi edinmek.
 
-GNU Readline başlık ve kütüphanesi: libreadline-dev (Debian/Ubuntu) veya readline (Homebrew)
+---
 
-POSIX uyumlu bir ortam (Linux veya WSL)
+## 🛠 Planlanan Özellikler
 
+- **Prompt** gösterimi
+- **Komut yürütme**
+  - Dış komutlar (`/bin/ls`, `/usr/bin/grep` vb.)
+  - Built-in komutlar (`cd`, `echo`, `pwd`, `export`, `unset`, `env`, `exit`)
+- **Yönlendirmeler**
+  - `>` `>>` `<` `<<` (heredoc)
+- **Pipe** desteği (`|`)
+- **Çevresel değişkenlerin yönetimi** (`$HOME`, `$PATH` vb.)
+- **Tırnak işaretleri**
+  - Tek tırnak `'...'` (literal)
+  - Çift tırnak `"..."` (expansion ile)
+- **Signal yönetimi**
+  - `Ctrl+C`, `Ctrl+D`, `Ctrl+\`
 
-Kurulum (Ubuntu/Debian):
+---
 
-sudo apt-get update && sudo apt-get install -y build-essential libreadline-dev
+## 📂 Proje Yapısı (Planlanan)
 
-Derleme ve Çalıştırma
+```
+minishell/
+├── inc/              # Header dosyaları
+├── src/              # Kaynak kodlar
+│   ├── lexer/        # Girdi -> Token
+│   ├── parser/       # Token -> AST
+│   ├── executor/     # AST -> Çalışan process
+│   ├── builtins/     # Dahili komutlar
+│   ├── utils/        # Yardımcı fonksiyonlar
+│   └── main.c
+├── Makefile
+└── README.md
+```
 
+---
+
+## 🚀 Kurulum
+
+```bash
 git clone https://github.com/Sayicon/minishell.git
 cd minishell
 make
 ./minishell
-
-> Makefile tipik hedefler: make, make clean, make fclean, make re.
-
-
-
+```
 
 ---
 
-Özellik Durumu
+## 📌 Kullanım (Örnekler - Planlanan)
 
-Aşağıdaki liste projedeki işlevlerin güncel durumunu gösterir.
-
-Çekirdek
-
-[x] Prompt (kullanıcı/host/cwd) oluşturma
-
-[x] Sinyaller: SIGINT için prompt davranışı; SIGQUIT maskelenir/ignore
-
-[x] Çevre (env) listesi: envp içeriğinden bağlı liste oluşturma, erişim yardımcıları
-
-[x] Bellek yönetimi: Özel Garbage Collector yardımcıları
-
-[ ] Executor: fork/execve, dup2, pipe zinciri
-
-[ ] Yerleşik komutlar: echo, cd, pwd, export, unset, env, exit
-
-
-Lexer / Tokenizer
-
-[x] Kelime (WORD), boşluk ayrıştırma
-
-[x] Operatörler: |, <, >, >>, << (tokenize)
-
-[x] Tırnaklar: '...' (literal), "..." (expansion koruması)
-
-[ ] Değişken genişletme: $VAR, $? (lexer+expander)
-
-[ ] Heredoc içerik akışı ve "NOEXP" delimitleyici davranışları
-
-[ ] (Opsiyonel/Bonus) Mantıksal &&, || ve (/) gruplama
-
-
-Parser / AST
-
-[ ] Komut düğümü (argv, redir listesi)
-
-[ ] Boru hattı ve sıradüzen
-
-
-Hata Yönetimi & Edge Caseler
-
-[ ] Sentaks hataları ve tutarlı exit status
-
-[ ] Quote/escape köşe durumları
-
-
-
----
-
-Proje Yapısı (Güncel)
-
-minishell/
-├── inc/                    # Header dosyaları (genel tipler, API)
-├── src/
-│   ├── lexer/              # Girdi → Token (kelime/operatör/quote işleme)
-│   ├── parser/             # Token → AST (planlanıyor)
-│   ├── executor/           # AST → process ve pipe yürütme (planlanıyor)
-│   ├── builtins/           # echo, cd, pwd, export, unset, env, exit (planlanıyor)
-│   ├── env/                # env listesi, arama/ekleme/güncelleme yardımcıları
-│   ├── signals/            # SIGINT/SIGQUIT davranışı, terminal modları
-│   └── utils/              # Garbage Collector, string/errno yardımcıları
-├── obj/                    # .o çıktıları (derleme sırasında)
-├── Makefile
-└── README.md
-
-> Not: Klasör isimleri ve kapsamı, commitlerle birlikte evrilebilir; üstteki yapı mevcut düzeni ve hedef mimariyi yansıtır.
-
-
-
-
----
-
-Kullanım (Hızlı Örnekler)
-
+```bash
 minishell$ echo "Merhaba Dünya"
 Merhaba Dünya
+
+minishell$ ls -l | grep minishell
+-rwxr-xr-x  1 user  user   12345 Aug 15 12:00 minishell
 
 minishell$ export NAME=Kerem
 minishell$ echo $NAME
 Kerem
-
-minishell$ ls -l | grep minishell
--rwxr-xr-x  1 user  user   12345 Aug 21 12:00 minishell
-
-> Not: Örnekler, hedeflenen davranışı gösterir; tüm akışlar executor/parsing tamamlandıkça birebir hale gelecektir.
-
-
-
+```
 
 ---
 
-Geliştirme Notları
+## 📖 Kaynaklar
 
-Norm/42 Uyumu: Başlık korumaları, fonksiyon uzunluğu ve dosya boyutları 42 Norm kurallarına göre tutulur.
-
-Sinyaller: Prompt açıkken Ctrl-C satırı temizleyip yeni satır verir; Ctrl-\ görmezden gelinir.
-
-Bellek: GC ile ayrılan bloklar kabuk kapanışında toptan serbest bırakılır; ara serbest bırakma yardımcıları mevcuttur.
-
-Taşınabilirlik: Linux/WSL üzerinde geliştirilmiştir; macOS ortamlarda Readline sürüm eşleşmesine dikkat edin.
-
-
-Test Önerileri
-
-Valgrind: valgrind --leak-check=full --show-leak-kinds=all ./minishell
-
-Quote karması: echo "" '' "a b" 'c d' $USER "$USER" '$USER' | grep "x|y" | cat <<EOF << "NOEXP" >>>out2 || echo end
-
-Redir/pipe sıra denemeleri, boş girdi/EOF, çoklu boşluk/sekme dizileri
-
-
+- [GNU Bash Reference Manual](https://www.gnu.org/software/bash/manual/)
+- [POSIX Shell Command Language](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html)
+- 42 School **subject PDF** (ödev dokümanı) (42 Kendi subjectlerinin açık bir şekilde paylaşılmasına artık sıcak bakmıyor bu yüzden burda yer vermeyeceğim)
 
 ---
 
-Yol Haritası
+## 📜 Lisans
 
-1. Parser/AST iskeletinin tamamlanması
-
-
-2. Executor ile pipe/redirection akışı
-
-
-3. Yerleşikler ve $?/env genişletme
-
-
-4. Heredoc akışı ve NOEXP varyantı
-
-
-5. Hata/sentaks mesajlarının standardizasyonu
-
-
-
-
----
-
-Kaynaklar
-
-GNU Bash Reference Manual
-
-POSIX Shell Command Language
-
-42 minishell subject (kamusal paylaşım kısıtlarından ötürü doğrudan eklenmemiştir)
-
-
-Lisans
-
-Bu proje MIT lisansı ile lisanslıdır. Ayrıntılar için LICENSE dosyasına bakınız.
-
+Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
