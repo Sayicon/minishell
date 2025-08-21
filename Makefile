@@ -21,6 +21,7 @@ SRCS		= $(SRC_UTILS)/garbage_collector/ft_garbage_collector_one.c \
 			  $(SRC_DIR)/lexer/tokens.c \
 			  $(SRC_DIR)/lexer/tokenizer.c \
 			  $(SRC_DIR)/lexer/tokenizer_utils.c \
+			  $(SRC_DIR)/parser/-------- \
 			  $(SRC_DIR)/main/main.c
 
 

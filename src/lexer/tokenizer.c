@@ -74,7 +74,7 @@ static t_bool	handle_quotes(char *input, int *i)
 			(*i)++;
 		if (input[*i] != quote_type)
 		{
-			report_error(E_WRITE_STDE, "minishell: syntax error near unexpected token ", NULL);
+			report_error(NULL);
 			return (FALSE);
 		}
 		else

@@ -1,7 +1,7 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 
-/*		<===================[DEFINES]======================>*/
+/*		<======================[DEFINES]======================>*/
 //POSIX sinyal kütüphanesini rahat açabilsin diye define
 # define _POSIX_C_SOURCE 200809L
 # define E_WPERROR 1
@@ -20,7 +20,7 @@
 # define C_RED			"\033[0;31m"
 # define C_RESET		"\033[0m"
 
-/*		<===================[ENUMS]======================>*/
+/*		<======================[ENUMS]======================>*/
 /*Tokens symbols: 
 		WORD: Normal words, arguments, etc.
 		PIPE: Pipe operator '|'
@@ -46,7 +46,24 @@ typedef enum s_bool
 	TRUE
 }	t_bool;
 
-/*		<===================[STRUCTS]======================>*/
+typedef enum s_node_type
+{
+	NODE_COMMAND,
+	NODE_PIPE,
+	NODE_AND,
+	NODE_OR,
+	NODE_SUBSHELL
+}	t_node_type;
+
+typedef enum s_redir_type
+{
+	R_IN,
+	R_OUT,
+	R_APPEND,
+	R_HEREDOC
+}	t_redir_type;
+
+/*		<======================[STRUCTS]======================>*/
 
 /*		<=======[FT_GARBAGE_COLLECTOR]=======>*/
 typedef struct s_gc
@@ -56,7 +73,6 @@ typedef struct s_gc
 }	t_gc;
 
 /*		<=======[TOKENIZER]=======>*/
-
 typedef struct s_token
 {
 	t_token_type	type;
@@ -71,6 +87,32 @@ typedef struct s_token_list
 	int		size;
 }	t_token_list;
 
+/*		<=======[PARSER]=======>*/
+typedef struct s_redir
+{
+	t_redir_type	type;
+	char			*filename;
+	int				heredoc_fd;
+	struct s_redir	*next;
+}	t_redir;
+
+typedef struct s_command
+{
+	char			**args;
+	int				arg_count;
+	t_redir			*redirs;
+	int				heredoc_fd;
+	int				is_builtin;
+}	t_command;
+
+typedef struct s_ast
+{
+	t_node_type		type;
+	struct s_ast	*left;
+	struct s_ast	*right;
+	t_command		*cmd;
+}	t_ast;
+
 /*		<=======[MINISHELL]=======>*/
 typedef struct s_env
 {
@@ -84,6 +126,7 @@ typedef struct s_shell
 	t_env			*env;
 	t_gc			*gc;
 	t_token_list	*token_list;
+	t_ast			*ast;
 	int		last_status;
 }	t_shell;
 

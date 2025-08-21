@@ -46,15 +46,15 @@ void	token_exit(char *str, t_token_list *token_list, t_shell *shell)
 		-> token: Hata ile ilgili token yazdırılır.
 		-> str: Hata mesajı yazdırılır.
 */
-void	report_error(int err_type, char *str, char *token)
+void	report_error(char *token)
 {
-	if (err_type == E_WPERROR && str)
-		perror(str);
-	else if (err_type == E_WRITE_STDE && str && token)
+	ft_putstr_fd("minishell: syntax error near unexpected token", STDERR_FILENO);
+	if (token)
 	{
-		ft_putstr_fd(str, STDERR_FILENO);
 		ft_putstr_fd(" \'", STDERR_FILENO);
 		ft_putstr_fd(token, STDERR_FILENO);
 		ft_putstr_fd("\'\n", STDERR_FILENO);
 	}
+	else
+		ft_putstr_fd("\n", STDERR_FILENO);
 }

@@ -45,19 +45,34 @@ void	minishell(char *input, t_shell *shell)
 	shell->token_list = tokenizer(input, shell);
 	if (!shell->token_list)
 	{
-		/* Syntax error code */
 		shell->last_status = 2;
 		return ;
 	}
 	write_all_tokens(shell->token_list);
+	shell->ast = parser(shell->token_list, shell);
+	if (!shell->ast)
+	{
+		shell->last_status = 2;
+		return ;
+	}
 	gc_free_tokens(&shell->token_list);
+}
+
+t_ast	*parser(t_token_list *token_list, t_shell *shell)
+{
+	if (!handle_syntax_errors(token_list, shell))
+	{
+		gc_free_tokens(&(shell->token_list));
+		return (NULL);
+	}
 }
 
 static void	shell_init(t_shell *shell, char **envp)
 {
 	shell->gc = NULL;
-	shell->token_list = NULL;
 	shell->env = env_init(envp, shell);
+	shell->token_list = NULL;
+	shell->ast = NULL;
 	if (!shell->env)
 		clean_exit(shell, 1, E_WRITE_STDE, "minishell: failed to init environ\n");
 	shell->last_status = 0;

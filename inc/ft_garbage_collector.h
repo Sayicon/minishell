@@ -1,11 +1,11 @@
 #ifndef FT_GARBAGE_COLLECTOR_H
 # define FT_GARBAGE_COLLECTOR_H
 
-/*		<=======[INCLUDES]=======>*/
+/*		<======================[INCLUDES]======================>*/
 # include "structs.h"
 # include "sys/types.h"
 
-/*		<=======[FUNCTIONS]=======>*/
+/*		<======================[FUNCTIONS]======================>*/
 int			gc_add_garbage(void	*ptr, t_shell *shell);
 void		*gc_malloc(size_t size, t_shell *shell);
 void		*gc_calloc(size_t size, t_shell *shell);

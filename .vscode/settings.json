@@ -8,6 +8,9 @@
 		"signal.h": "c",
 		"cstdlib": "c",
 		"stdlib.h": "c",
-		"structs.h": "c"
+		"structs.h": "c",
+		"tokenizer.h": "c",
+		"parser.h": "c",
+		"type_traits": "c"
 	}
 }
